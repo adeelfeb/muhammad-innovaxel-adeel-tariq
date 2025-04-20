@@ -4,7 +4,7 @@ import { DB_NAME } from '../constants.js';
 
 const connectDB = async () => {
   try {
-    console.log("Attempting to connect with URI:", config.mongodbUri)
+    // console.log("Attempting to connect with URI:", config.mongodbUri)
     const conn = await mongoose.connect(config.mongodbUri, {
       dbName: DB_NAME,
       serverSelectionTimeoutMS: 5000, 
