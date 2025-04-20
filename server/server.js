@@ -9,7 +9,7 @@ const startServer = async () => {
         const PORT = config.port;
 
         const server = app.listen(PORT, () => {
-            console.log(`⚙️ Server is running in ${config.env} mode on port: ${PORT}`);
+            console.log(`⚙️ Server is running in ${config.env} mode at: http://localhost:${PORT}/`);
         })
     } catch (error) {
         console.error("❌ Fatal error during server startup:", error);
