@@ -21,6 +21,20 @@ const UrlSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
+    accessLog: {
+      type: [{ 
+        ip: {
+          type: String,
+          required: true  
+        },
+        accessedAt: {
+          type: Date,
+          required: true,
+          default: Date.now  
+        }
+      }],
+      default: []  
+    },
   },
   {
     timestamps: true, 

@@ -85,10 +85,13 @@
         color: #721c24;
       }
       .url-list-container {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 1px solid #eee;
+        width: 100vw; /* Full width of the viewport */
+        margin-left: calc(-1 * ((100vw - 100%) / 2)); /* Cancels body's auto horizontal margin */
+        padding-left: 20px;
+        padding-right: 20px;
+        box-sizing: border-box;
       }
+
       .url-list-container h2 {
         text-align: center;
         color: #333;
@@ -200,33 +203,55 @@
         <table class="url-table">
           <thead>
             <tr>
-              <th>Short URL</th>
-              <th>Original URL</th>
-              <th>Created</th>
-              <th>Clicks</th>
+                <th>Short URL</th>
+                <th>Original URL</th>
+                <th>Created</th>
+                <th>Clicks</th>
+                <th>Access Details</th>  
             </tr>
-          </thead>
-          <tbody id="url-list-body">
-            <% if (locals.urls && locals.urls.length > 0) { %> <%
-            urls.forEach(function(url) { %>
-            <tr>
-              <td class="short-url-cell">
-                <a href="<%= url.fullShortUrl %>" target="_blank"
-                  ><%= url.fullShortUrl %></a
-                >
-              </td>
-              <td class="original-url" title="<%= url.originalUrl %>">
-                <%= url.originalUrl %>
-              </td>
-              <td class="date-cell">
-                <%= new Date(url.createdAt).toLocaleDateString() %> <%= new
-                Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit',
-                minute: '2-digit' }) %>
-              </td>
-              <td class="clicks-cell"><%= url.accessCount %></td>
-            </tr>
-            <% }); %> <% } %>
-          </tbody>
+        </thead>
+        <tbody id="url-list-body">
+          <% if (locals.urls && locals.urls.length > 0) { %>
+              <% urls.forEach(function(url) { %>
+                  <tr>
+                      <td class="short-url-cell">
+                          <a href="<%= url.fullShortUrl %>" target="_blank">
+                              <%= url.fullShortUrl %>
+                          </a>
+                      </td>
+                      <td class="original-url" title="<%= url.originalUrl %>">
+                          <%= url.originalUrl %>
+                      </td>
+                      <td class="date-cell">
+                          <%= new Date(url.createdAt).toLocaleDateString() %>
+                          <%= new Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+                      </td>
+                      <td class="clicks-cell"><%= url.accessCount %></td>
+      
+                      <!-- NEW CELL FOR ACCESS LOGS -->
+                      <td class="access-log-cell">
+                          <% if (url.accessLog && url.accessLog.length > 0) { %>
+                              <ul class="access-log-list">
+                                  <% url.accessLog.slice(0, 5).forEach(function(logEntry) { %> <!-- Show first 5, for example -->
+                                      <li>
+                                          <span class="ip-address"><%= logEntry.ip %></span> -
+                                          <span class="access-time"><%= new Date(logEntry.accessedAt).toLocaleDateString() %></span>
+                                      </li>
+                                  <% }); %>
+                                  <% if (url.accessLog.length > 5) { %>
+                                      <li>... and <%= url.accessLog.length - 5 %> more</li>
+                                  <% } %>
+                              </ul>
+                          <% } else { %>
+                              <span class="no-accesses">No accesses yet</span>
+                          <% } %>
+                      </td>
+                      <!-- END NEW CELL -->
+      
+                  </tr>
+              <% }); %>
+          <% } %>
+      </tbody>
         </table>
       </div>
 
