@@ -1,9 +1,7 @@
 import express from 'express';
 import {
-    renderErrorPage,
-    renderHomePage,
     createShortUrl,
-    // getOriginalUrlData,
+    getOriginalUrlData,
     // updateShortUrl,
     // deleteShortUrl,
     // getShortUrlStats
@@ -14,7 +12,7 @@ const router = express.Router();
 
 
 router.post('/shorten', createShortUrl);
-// router.get('/shorten/:shortCode', getOriginalUrlData);
+router.get('/shorten/:shortCode', getOriginalUrlData);
 // router.put('/shorten/:shortCode', updateShortUrl);
 // router.delete('/shorten/:shortCode', deleteShortUrl);
 // router.get('/shorten/:shortCode/stats', getShortUrlStats);

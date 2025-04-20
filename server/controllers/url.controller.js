@@ -155,3 +155,33 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
     }
 });
 
+
+
+
+export const getOriginalUrlData = asyncHandler(async (req, res) => {
+    const { shortCode } = req.params;
+    // console.log("The shortCode recveived is:", shortCode)
+    if (!shortCode) {
+         throw new ApiError(400, "Short code parameter is required");
+    }
+    
+    const urlDoc = await Url.findOne({ shortCode: shortCode })
+        .select('id originalUrl shortCode createdAt updatedAt') // Exclude accessCount
+        .lean();
+    
+    if (!urlDoc) {
+        throw new ApiError(404, "Short URL not found");
+    }
+    
+    return res.status(200).json(
+        new ApiResponse(200, {
+             id: urlDoc._id,
+             url: urlDoc.originalUrl,
+             shortCode: urlDoc.shortCode,
+             createdAt: urlDoc.createdAt,
+             updatedAt: urlDoc.updatedAt
+        }, "URL data retrieved successfully")
+    );
+    });
+
+
