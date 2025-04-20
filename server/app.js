@@ -21,13 +21,12 @@ app.use(express.urlencoded({ extended: true, limit: '16kb' }));
 app.set('view engine', 'ejs');  
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/', renderHomePage);
-app.get('/error', renderErrorPage);
+
 
 import urlRouter from './routes/url.routes.js'
+import rootRouter from './routes/index.routes.js' 
 
-// router.get('/:shortCode', redirectToOriginalUrl);
-
+app.use("/", rootRouter);
 app.use("/api/v1/", urlRouter);
 
 

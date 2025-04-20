@@ -131,7 +131,7 @@ export const renderErrorPage = asyncHandler(async (req, res) => {
 
 export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
     const { shortCode } = req.params;
-    console.log("The data received in the redirect fucntion:", shortCode)
+    // console.log("The data received in the redirect fucntion:", shortCode)
 
     if (!shortCode) {
         return res.status(404).render('error', {  
@@ -145,7 +145,7 @@ export const redirectToOriginalUrl = asyncHandler(async (req, res) => {
     if (urlDoc) {
         urlDoc.accessCount += 1;  
         await urlDoc.save({ validateBeforeSave: false });
-
+        // console.log("Now redirecting")
         return res.redirect(302, urlDoc.originalUrl);  
     } else {
         return res.status(404).render('error', {  

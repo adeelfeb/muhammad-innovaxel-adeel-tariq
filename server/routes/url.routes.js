@@ -1,5 +1,7 @@
 import express from 'express';
 import {
+    renderErrorPage,
+    renderHomePage,
     createShortUrl,
     // getOriginalUrlData,
     // updateShortUrl,
@@ -8,6 +10,8 @@ import {
 } from '../controllers/url.controller.js';
 
 const router = express.Router();
+
+
 
 router.post('/shorten', createShortUrl);
 // router.get('/shorten/:shortCode', getOriginalUrlData);
