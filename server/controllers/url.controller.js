@@ -185,3 +185,87 @@ export const getOriginalUrlData = asyncHandler(async (req, res) => {
     });
 
 
+export const updateShortUrl = asyncHandler(async (req, res) => {
+    const { shortCode } = req.params; 
+    const { url: newOriginalUrl } = req.body;
+
+    // --- VALIDATION ---
+    if (!shortCode) {
+        throw new ApiError(400, "Short code parameter is required");
+    }
+
+    if (!newOriginalUrl) {
+        throw new ApiError(400, "New URL (key: 'url') is required in the request body");
+    }
+
+    if (!isValidHttpUrl(newOriginalUrl)) {
+        throw new ApiError(400, "Invalid new URL format. Must start with http:// or https://");
+    }
+
+    // --- DATABASE OPERATION ---
+    const updatedUrl = await Url.findOneAndUpdate(
+        { shortCode: shortCode },
+        { originalUrl: newOriginalUrl },
+        { new: true, runValidators: true }
+    ).select('id originalUrl shortCode createdAt updatedAt').lean();
+
+    if (!updatedUrl) {
+        throw new ApiError(404, "Short URL not found");
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, {
+            id: updatedUrl._id,
+            url: updatedUrl.originalUrl,
+            shortCode: updatedUrl.shortCode,
+            createdAt: updatedUrl.createdAt,
+            updatedAt: updatedUrl.updatedAt
+        }, "Short URL updated successfully")
+    );
+});
+    
+    
+    
+export const deleteShortUrl = asyncHandler(async (req, res) => {
+    const { shortCode } = req.params;
+    if (!shortCode) {
+            throw new ApiError(400, "Short code parameter is required");
+    }
+
+    const result = await Url.deleteOne({ shortCode: shortCode });
+
+    if (result.deletedCount === 0) {
+        throw new ApiError(404, "Short URL not found");
+    }
+
+    return res.status(200).json( 
+            new ApiResponse(204, null, "Short URL deleted successfully")
+    );
+    });
+
+
+export const getShortUrlStats = asyncHandler(async (req, res) => {
+    const { shortCode } = req.params;
+    if (!shortCode) {
+            throw new ApiError(400, "Short code parameter is required");
+    }
+
+    const urlDoc = await Url.findOne({ shortCode: shortCode })
+        .select('id originalUrl shortCode createdAt updatedAt accessCount') // Include accessCount
+        .lean();
+
+    if (!urlDoc) {
+        throw new ApiError(404, "Short URL not found");
+    }
+
+        return res.status(200).json(
+        new ApiResponse(200, {
+                id: urlDoc._id,
+                url: urlDoc.originalUrl,
+                shortCode: urlDoc.shortCode,
+                createdAt: urlDoc.createdAt,
+                updatedAt: urlDoc.updatedAt,
+                accessCount: urlDoc.accessCount // Include stats here
+        }, "URL statistics retrieved successfully")
+    );
+    });
