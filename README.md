@@ -6,7 +6,16 @@ This project is a RESTful API built with Node.js, Express, and MongoDB that prov
 
 It also includes a basic web interface (using EJS) to display the history of shortened URLs and handle the redirection from the short URL to the original URL.
 
+### Screenshots
+
+#### Home Page (Form Input and History)
+![Home Page](./screenShots/home.png)
+
+#### Error Page
+![Error Redirect Page](./screenshots/error.png)
+
 ## 2. Features
+
 
 *   **Create Short URL:** Generate a unique short code for a given long URL via API.
 *   **Retrieve Original URL Data:** Get the details (excluding statistics) associated with a short code via API.
