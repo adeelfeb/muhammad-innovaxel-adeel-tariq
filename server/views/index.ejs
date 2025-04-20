@@ -1,112 +1,144 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
     <title><%= title %></title>
     <style>
-      
       body {
         font-family: sans-serif;
         padding: 20px;
-        max-width: 700px;
+        max-width: 900px;
         margin: auto;
-        background-color: #f4f7f6;  
+        background-color: #f4f7f6;
         color: #333;
       }
       .form-container {
-        margin-top: 30px;  
+        margin-top: 30px;
         margin-bottom: 20px;
-        padding: 25px;  
-        border: 1px solid #ddd;  
-        border-radius: 8px;  
-        background-color: #ffffff;  
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+        padding: 25px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       }
       h1 {
         text-align: center;
-        color: #2c3e50; 
+        color: #2c3e50;
         margin-bottom: 30px;
       }
       label {
         display: block;
-        margin-bottom: 8px;  
+        margin-bottom: 8px;
         font-weight: bold;
-        color: #555;  
+        color: #555;
       }
       input[type="url"] {
-        width: calc(100% - 22px);  
-        padding: 12px;  
-        margin-bottom: 15px;  
+        width: calc(100% - 22px);
+        padding: 12px;
+        margin-bottom: 15px;
         border: 1px solid #ccc;
-        border-radius: 4px;  
-        font-size: 1em;  
-        box-sizing: border-box;  
+        border-radius: 4px;
+        font-size: 1em;
+        box-sizing: border-box;
       }
       button {
-        display: block;  
-        width: 100%; 
-        padding: 12px 15px; 
-        background-color: #3498db;  
+        display: block;
+        width: 100%;
+        padding: 12px 15px;
+        background-color: #3498db;
         color: white;
         border: none;
         border-radius: 4px;
         cursor: pointer;
-        font-size: 1.1em;  
-        transition: background-color 0.2s ease;  
+        font-size: 1.1em;
+        transition: background-color 0.2s ease;
       }
       button:hover {
-        background-color: #2980b9; 
-      } 
-      .result-area {
-        margin-top: 20px;
+        background-color: #2980b9;
       }
-      .result {
-        padding: 15px;
-        border: 1px solid #28a745;
-        background-color: #d4edda;
-        color: #155724;
-        border-radius: 5px;
-      }
-      .error {
-        padding: 15px;
-        border: 1px solid #dc3545;
-        background-color: #f8d7da;
-        color: #721c24;
-        border-radius: 5px;
-      }
-      .result a {
-        color: #0056b3;
-        font-weight: bold;
-      }
-      .result small {
-        display: block;
-        margin-top: 5px;
-        color: #555;
-      }
-      .result input[type="text"] {
-        width: calc(100% - 80px);
-        padding: 5px;
-        margin-top: 8px;
-        margin-right: 5px;
-      }
-      .result button {
-        padding: 5px 10px;
-        font-size: 0.9em;
-        vertical-align: baseline;
-        display: inline-block;
-        width: auto;
-      }  
+      .url-list-container {
+         margin-top: 40px;
+         padding-top: 20px;
+         border-top: 1px solid #eee;
+       }
+       .url-list-container h2 {
+         text-align: center;
+         color: #333;
+         margin-bottom: 20px;
+       }
+       .url-table {
+         width: 100%;
+         border-collapse: collapse;
+         background-color: #fff;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+         border-radius: 5px;
+         overflow: hidden; /* Ensures border radius applies to table */
+       }
+       .url-table th,
+       .url-table td {
+         padding: 12px 15px;
+         border-bottom: 1px solid #ddd;
+         text-align: left;
+         vertical-align: middle;
+       }
+        .url-table th {
+         background-color: #e9ecef;
+         font-weight: bold;
+         color: #495057;
+       }
+       .url-table tr:last-child td {
+            border-bottom: none; /* Remove border from last row */
+       }
+       .url-table tr:hover {
+         background-color: #f1f1f1; /* Subtle hover effect */
+       }
+       .url-table td a {
+         color: #007bff;
+         text-decoration: none;
+         font-weight: 500;
+       }
+       .url-table td a:hover {
+         text-decoration: underline;
+       }
+        .url-table .short-url-cell {
+            word-break: break-all; /* Break long URLs if needed */
+        }
+       .url-table .original-url {
+         max-width: 300px;
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         font-size: 0.9em;
+         color: #555;
+       }
+        .url-table .date-cell {
+            font-size: 0.85em;
+            color: #6c757d;
+            white-space: nowrap;
+        }
+        .url-table .clicks-cell {
+            text-align: center;
+            font-weight: bold;
+        }
+       .no-urls {
+         text-align: center;
+         color: #777;
+         margin-top: 20px;
+         padding: 20px;
+         background-color: #fff;
+         border-radius: 5px;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+       }
     </style>
   </head>
-  <body> 
+  <body>
     <h1><%= title %></h1>
 
-    <div class="form-container"> 
+    <div class="form-container">
       <form method="POST" action="/api/v1/shorten">
         <div>
-          <label for="urlInput">Enter URL to Shorten:</label> 
+          <label for="urlInput">Enter URL to Shorten:</label>
           <input
             type="url"
             id="urlInput"
@@ -114,10 +146,49 @@
             placeholder="https://www.example.com/very/long/url/to/shorten"
             required
           />
-        </div> 
+        </div>
         <button type="submit">Shorten URL</button>
       </form>
     </div>
- 
+
+    <div class="url-list-container">
+      <h2>Shortened URL History</h2>
+
+      <% if (locals.urls && locals.urls.length > 0) { %>
+      <table class="url-table">
+        <thead>
+          <tr>
+            <th>Short URL</th>
+            <th>Original URL</th>
+            <th>Created</th>
+            <th>Clicks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% urls.forEach(function(url) { %>
+          <tr>
+            <td class="short-url-cell">
+              <a href="<%= url.fullShortUrl %>" target="_blank"
+                ><%= url.fullShortUrl %></a
+              >
+            </td>
+            <td class="original-url" title="<%= url.originalUrl %>">
+              <%= url.originalUrl %>
+            </td>
+            <td class="date-cell">
+              <%= new Date(url.createdAt).toLocaleDateString() %>
+              <%= new Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
+            </td>
+            <td class="clicks-cell">
+              <%= url.accessCount %>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <% } else { %>
+      <p class="no-urls">No URLs have been shortened yet.</p>
+      <% } %>
+    </div>
   </body>
 </html>

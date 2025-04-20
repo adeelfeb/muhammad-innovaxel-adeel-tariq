@@ -10,6 +10,11 @@ const UrlSchema = new mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      // This line is crucial for the performance and scalability of your URL shortener. 
+      // It instructs the database to create an optimized data structure (an index) specifically for the shortCode field, 
+      // allowing for near-instantaneous retrieval of documents based on their short code,
+      // which is essential for fast redirects and data lookups.
+      index: true
     },
     accessCount: {
       type: Number,
@@ -22,11 +27,7 @@ const UrlSchema = new mongoose.Schema(
   }
 );
 
-// This line is crucial for the performance and scalability of your URL shortener. 
-// It instructs the database to create an optimized data structure (an index) specifically for the shortCode field, 
-// allowing for near-instantaneous retrieval of documents based on their short code,
-// which is essential for fast redirects and data lookups.
-UrlSchema.index({ shortCode: 1 });
+
 
 const Url = mongoose.model('Url', UrlSchema); 
 
