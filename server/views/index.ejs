@@ -43,8 +43,8 @@
         box-sizing: border-box;
       }
       button {
-        display: block;
-        width: 100%;
+        display: inline-block;
+        width: auto;
         padding: 12px 15px;
         background-color: #3498db;
         color: white;
@@ -53,90 +53,131 @@
         cursor: pointer;
         font-size: 1.1em;
         transition: background-color 0.2s ease;
+        margin-right: 10px;
+      }
+      button#reload-button {
+        background-color: #6c757d;
       }
       button:hover {
         background-color: #2980b9;
       }
+      button#reload-button:hover {
+        background-color: #5a6268;
+      }
+      button:disabled {
+        background-color: #cccccc;
+        cursor: not-allowed;
+      }
+      .form-feedback {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 4px;
+        display: none;
+      }
+      .form-feedback.success {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        color: #155724;
+      }
+      .form-feedback.error {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+      }
       .url-list-container {
-         margin-top: 40px;
-         padding-top: 20px;
-         border-top: 1px solid #eee;
-       }
-       .url-list-container h2 {
-         text-align: center;
-         color: #333;
-         margin-bottom: 20px;
-       }
-       .url-table {
-         width: 100%;
-         border-collapse: collapse;
-         background-color: #fff;
-         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-         border-radius: 5px;
-         overflow: hidden; /* Ensures border radius applies to table */
-       }
-       .url-table th,
-       .url-table td {
-         padding: 12px 15px;
-         border-bottom: 1px solid #ddd;
-         text-align: left;
-         vertical-align: middle;
-       }
-        .url-table th {
-         background-color: #e9ecef;
-         font-weight: bold;
-         color: #495057;
-       }
-       .url-table tr:last-child td {
-            border-bottom: none; /* Remove border from last row */
-       }
-       .url-table tr:hover {
-         background-color: #f1f1f1; /* Subtle hover effect */
-       }
-       .url-table td a {
-         color: #007bff;
-         text-decoration: none;
-         font-weight: 500;
-       }
-       .url-table td a:hover {
-         text-decoration: underline;
-       }
-        .url-table .short-url-cell {
-            word-break: break-all; /* Break long URLs if needed */
-        }
-       .url-table .original-url {
-         max-width: 300px;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         white-space: nowrap;
-         font-size: 0.9em;
-         color: #555;
-       }
-        .url-table .date-cell {
-            font-size: 0.85em;
-            color: #6c757d;
-            white-space: nowrap;
-        }
-        .url-table .clicks-cell {
-            text-align: center;
-            font-weight: bold;
-        }
-       .no-urls {
-         text-align: center;
-         color: #777;
-         margin-top: 20px;
-         padding: 20px;
-         background-color: #fff;
-         border-radius: 5px;
-         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-       }
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+      }
+      .url-list-container h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 20px;
+      }
+      .table-wrapper {
+        max-height: 60vh; /* Adjust height as needed (e.g., 400px) */
+        overflow-y: auto; /* Add vertical scrollbar if content overflows */
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 15px; /* Space below the scrollable area */
+      }
+      .url-table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: #fff; /* Removed box-shadow/border-radius from table itself */
+      }
+      .url-table th,
+      .url-table td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+        vertical-align: middle;
+      }
+      .url-table th {
+        background-color: #e9ecef;
+        font-weight: bold;
+        color: #495057;
+        position: sticky;
+        top: 0; /* Make header sticky within scrollable area */
+      }
+      .url-table tr:last-child td {
+        border-bottom: none;
+      }
+      .url-table tr:hover {
+        background-color: #f1f1f1;
+      }
+      .url-table td a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: 500;
+      }
+      .url-table td a:hover {
+        text-decoration: underline;
+      }
+      .url-table .short-url-cell {
+        word-break: break-all;
+      }
+      .url-table .original-url {
+        max-width: 300px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: 0.9em;
+        color: #555;
+      }
+      .url-table .date-cell {
+        font-size: 0.85em;
+        color: #6c757d;
+        white-space: nowrap;
+      }
+      .url-table .clicks-cell {
+        text-align: center;
+        font-weight: bold;
+      }
+      .no-urls {
+        text-align: center;
+        color: #777;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .page-controls {
+        margin-bottom: 20px; /* Added margin below buttons */
+        text-align: right;
+      }
     </style>
   </head>
   <body>
-    <h1><%= title %></h1>
+    <!-- <h1><%= title %></h1> -->
+
+    <div class="page-controls">
+      <button id="reload-button" type="button">Reload Page</button>
+    </div>
 
     <div class="form-container">
-      <form method="POST" action="/api/v1/shorten">
+      <form id="shorten-form" method="POST" action="/api/v1/shorten">
         <div>
           <label for="urlInput">Enter URL to Shorten:</label>
           <input
@@ -147,48 +188,156 @@
             required
           />
         </div>
-        <button type="submit">Shorten URL</button>
+        <button type="submit" id="submit-button">Shorten URL</button>
       </form>
+      <div id="form-feedback" class="form-feedback"></div>
     </div>
 
     <div class="url-list-container">
-      <h2>Shortened URL History</h2>
+      <!-- <h2>Shortened URL History</h2> -->
 
-      <% if (locals.urls && locals.urls.length > 0) { %>
-      <table class="url-table">
-        <thead>
-          <tr>
-            <th>Short URL</th>
-            <th>Original URL</th>
-            <th>Created</th>
-            <th>Clicks</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% urls.forEach(function(url) { %>
-          <tr>
-            <td class="short-url-cell">
-              <a href="<%= url.fullShortUrl %>" target="_blank"
-                ><%= url.fullShortUrl %></a
-              >
-            </td>
-            <td class="original-url" title="<%= url.originalUrl %>">
-              <%= url.originalUrl %>
-            </td>
-            <td class="date-cell">
-              <%= new Date(url.createdAt).toLocaleDateString() %>
-              <%= new Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
-            </td>
-            <td class="clicks-cell">
-              <%= url.accessCount %>
-            </td>
-          </tr>
-          <% }); %>
-        </tbody>
-      </table>
-      <% } else { %>
-      <p class="no-urls">No URLs have been shortened yet.</p>
+      <div class="table-wrapper">
+        <table class="url-table">
+          <thead>
+            <tr>
+              <th>Short URL</th>
+              <th>Original URL</th>
+              <th>Created</th>
+              <th>Clicks</th>
+            </tr>
+          </thead>
+          <tbody id="url-list-body">
+            <% if (locals.urls && locals.urls.length > 0) { %> <%
+            urls.forEach(function(url) { %>
+            <tr>
+              <td class="short-url-cell">
+                <a href="<%= url.fullShortUrl %>" target="_blank"
+                  ><%= url.fullShortUrl %></a
+                >
+              </td>
+              <td class="original-url" title="<%= url.originalUrl %>">
+                <%= url.originalUrl %>
+              </td>
+              <td class="date-cell">
+                <%= new Date(url.createdAt).toLocaleDateString() %> <%= new
+                Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit',
+                minute: '2-digit' }) %>
+              </td>
+              <td class="clicks-cell"><%= url.accessCount %></td>
+            </tr>
+            <% }); %> <% } %>
+          </tbody>
+        </table>
+      </div>
+
+      <% if (!locals.urls || locals.urls.length === 0) { %>
+      <p class="no-urls" id="no-urls-message">
+        No URLs have been shortened yet.
+      </p>
       <% } %>
     </div>
+
+    <script>
+      const shortenForm = document.getElementById("shorten-form");
+      const urlInput = document.getElementById("urlInput");
+      const submitButton = document.getElementById("submit-button");
+      const formFeedback = document.getElementById("form-feedback");
+      const urlTableBody = document.getElementById("url-list-body");
+      const noUrlsMessage = document.getElementById("no-urls-message");
+      const reloadButton = document.getElementById("reload-button");
+
+      function addUrlToTable(urlData) {
+        const newRow = document.createElement("tr");
+
+        const shortUrlCell = document.createElement("td");
+        shortUrlCell.classList.add("short-url-cell");
+        const shortUrlLink = document.createElement("a");
+        shortUrlLink.href = urlData.shortUrl;
+        shortUrlLink.textContent = urlData.shortUrl;
+        shortUrlLink.target = "_blank";
+        shortUrlCell.appendChild(shortUrlLink);
+        newRow.appendChild(shortUrlCell);
+
+        const originalUrlCell = document.createElement("td");
+        originalUrlCell.classList.add("original-url");
+        originalUrlCell.title = urlData.url;
+        originalUrlCell.textContent = urlData.url;
+        newRow.appendChild(originalUrlCell);
+
+        const dateCell = document.createElement("td");
+        dateCell.classList.add("date-cell");
+        const createdAtDate = new Date(urlData.createdAt);
+        dateCell.textContent = `${createdAtDate.toLocaleDateString()} ${createdAtDate.toLocaleTimeString(
+          [],
+          { hour: "2-digit", minute: "2-digit" }
+        )}`;
+        newRow.appendChild(dateCell);
+
+        const clicksCell = document.createElement("td");
+        clicksCell.classList.add("clicks-cell");
+        clicksCell.textContent =
+          urlData.accessCount !== undefined ? urlData.accessCount : 0;
+        newRow.appendChild(clicksCell);
+
+        urlTableBody.prepend(newRow);
+
+        if (noUrlsMessage && !noUrlsMessage.hidden) {
+          noUrlsMessage.hidden = true;
+          // Remove the element entirely if preferred after first add
+          // noUrlsMessage.remove();
+        }
+      }
+
+      async function handleSubmit(event) {
+        event.preventDefault();
+
+        const originalUrl = urlInput.value;
+        formFeedback.textContent = "";
+        formFeedback.style.display = "none";
+        submitButton.disabled = true;
+        submitButton.textContent = "Shortening...";
+
+        try {
+          const response = await fetch("/api/v1/shorten", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ url: originalUrl }),
+          });
+
+          const responseData = await response.json();
+
+          if (response.ok) {
+            formFeedback.textContent = responseData.message || "Success!";
+            formFeedback.className = "form-feedback success";
+            formFeedback.style.display = "block";
+            addUrlToTable(responseData.data);
+            urlInput.value = "";
+          } else {
+            formFeedback.textContent = `Error: ${
+              responseData.message || "An unknown error occurred."
+            }`;
+            formFeedback.className = "form-feedback error";
+            formFeedback.style.display = "block";
+          }
+        } catch (error) {
+          console.error("Submission Error:", error);
+          formFeedback.textContent =
+            "Network error or server issue. Please try again.";
+          formFeedback.className = "form-feedback error";
+          formFeedback.style.display = "block";
+        } finally {
+          submitButton.disabled = false;
+          submitButton.textContent = "Shorten URL";
+        }
+      }
+
+      shortenForm.addEventListener("submit", handleSubmit);
+
+      reloadButton.addEventListener("click", () => {
+        window.location.reload();
+      });
+    </script>
   </body>
 </html>
