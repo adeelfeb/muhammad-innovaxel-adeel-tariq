@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <!-- Use title passed from backend -->
+    <style>
+      /* General Reset & Base Styles */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+        margin: 0; /* Remove default margin */
+        padding: 30px; /* Add some padding around the container */
+        background-color: #f8f9fa; /* Lighter grey background */
+        color: #343a40; /* Darker default text */
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased; /* Smoother fonts on Mac/iOS */
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* Container Styling */
+      .details-container {
+        max-width: 850px; /* Slightly wider */
+        margin: 30px auto; /* Center container with top/bottom margin */
+        padding: 30px 40px; /* Increased padding */
+        background-color: #ffffff; /* White background */
+        border: 1px solid #dee2e6; /* Lighter border color */
+        border-radius: 10px; /* More rounded corners */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+        overflow: hidden; /* Contain elements */
+      }
+
+      /* Headings */
+      h1 {
+        color: #2c3e50; /* Dark blue-grey */
+        text-align: center;
+        margin-top: 0; /* Remove top margin if it's the first element */
+        margin-bottom: 30px;
+        font-size: 2em; /* Larger */
+        font-weight: 600;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 15px;
+      }
+
+      h2 {
+        color: #495057; /* Medium grey */
+        margin-top: 40px; /* More space above */
+        margin-bottom: 20px; /* More space below */
+        font-size: 1.5em;
+        font-weight: 600;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      /* Header Count Styling */
+      h2 .count {
+        font-size: 0.8em; /* Smaller than h2 */
+        color: #6c757d; /* Lighter grey */
+        font-weight: normal;
+        margin-left: 5px;
+      }
+
+      /* Paragraphs & Key Info */
+      p {
+        margin-bottom: 15px; /* Consistent spacing */
+        font-size: 1em;
+        color: #495057; /* Slightly lighter than default */
+      }
+
+      p strong {
+        color: #343a40; /* Darker label */
+        font-weight: 600;
+        margin-right: 8px; /* Space after label */
+        display: inline-block; /* Helps with alignment if needed */
+        min-width: 110px; /* Optional: align labels */
+      }
+
+      /* Links */
+      a {
+        color: #007bff; /* Standard blue */
+        text-decoration: none;
+        transition: color 0.2s ease, text-decoration 0.2s ease; /* Smooth transition */
+      }
+
+      a:hover {
+        color: #0056b3; /* Darker blue on hover */
+        text-decoration: underline;
+      }
+
+      p a {
+        word-break: break-all; /* Prevent long URLs from breaking layout */
+      }
+
+      /* Code Snippets */
+      .code {
+        font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+        background-color: #e9ecef; /* Light grey background */
+        padding: 3px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+        border: 1px solid #dee2e6; /* Subtle border */
+        color: #495057;
+      }
+
+      h1 .code {
+        /* Code style within H1 */
+        font-size: 0.8em; /* Relative to h1 */
+        padding: 4px 8px;
+        vertical-align: middle; /* Align better with text */
+      }
+
+      /* Access Log List */
+      .access-log-list {
+        list-style: none;
+        padding: 0; /* Remove list padding */
+        margin: 0 0 20px 0; /* Remove default margin, add bottom margin */
+        max-height: 350px; /* Adjust height as needed */
+        overflow-y: auto; /* Enable scrolling */
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        background-color: #f8f9fa; /* Light background for the list area */
+      }
+
+      .access-log-list li {
+        padding: 12px 15px; /* Good padding */
+        border-bottom: 1px solid #e9ecef; /* Lighter separator */
+        font-size: 0.9em;
+        line-height: 1.5;
+        color: #495057;
+        transition: background-color 0.2s ease; /* Hover effect */
+      }
+
+      .access-log-list li:last-child {
+        border-bottom: none; /* No border on the last item */
+      }
+
+      .access-log-list li:nth-child(even) {
+        background-color: #ffffff; /* Zebra striping */
+      }
+
+      .access-log-list li:hover {
+        background-color: #eef2f7; /* Subtle hover background */
+      }
+
+      .access-log-list li strong {
+        /* Labels within list items */
+        display: inline-block; /* Better control */
+        min-width: 40px; /* Align 'IP:', 'Time:' */
+        font-weight: 600;
+        color: #343a40;
+      }
+
+      .access-log-list li .code {
+        /* Code within list */
+        font-size: 1em; /* Relative to list item font size */
+        padding: 2px 5px;
+      }
+
+      .access-log-list li em {
+        /* Agent/Referrer */
+        display: block; /* Put on new line */
+        margin-left: 10px; /* Indent */
+        margin-top: 5px;
+        font-size: 0.9em;
+        color: #6c757d; /* Grey italic text */
+        word-break: break-all; /* Handle long strings */
+      }
+
+      /* Back Link Button Styling */
+      .back-link {
+        display: inline-block;
+        margin-top: 30px; /* Space above the button */
+        padding: 10px 20px; /* Larger padding */
+        background-color: #6c757d; /* Secondary grey color */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1em;
+        font-weight: 500;
+        text-decoration: none; /* Override default link styles */
+        cursor: pointer;
+        transition: background-color 0.2s ease, box-shadow 0.2s ease; /* Smooth transition */
+      }
+
+      .back-link:hover {
+        background-color: #5a6268; /* Darker grey on hover */
+        color: white; /* Ensure text stays white */
+        text-decoration: none; /* No underline on hover */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow on hover */
+      }
+
+      /* Basic Scrollbar Styling (Optional - Webkit browsers) */
+      .access-log-list::-webkit-scrollbar {
+        width: 8px;
+      }
+      .access-log-list::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 5px;
+      }
+      .access-log-list::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 5px;
+      }
+      .access-log-list::-webkit-scrollbar-thumb:hover {
+        background: #aaa;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="details-container">
+      <h1>
+        Statistics for Short Code:
+        <span class="code"><%= urlDetails.shortCode %></span>
+      </h1>
+
+      <p><strong>Database ID:</strong> <%= urlDetails.id %></p>
+      <p>
+        <strong>Original URL:</strong>
+        <a
+          href="<%= urlDetails.url %>"
+          target="_blank"
+          title="<%= urlDetails.url %>"
+          ><%= urlDetails.url %></a
+        >
+      </p>
+      <p>
+        <strong>Short URL:</strong>
+        <a href="<%= urlDetails.fullShortUrl %>" target="_blank"
+          ><%= urlDetails.fullShortUrl %></a
+        >
+      </p>
+      <p><strong>Total Clicks:</strong> <%= urlDetails.accessCount %></p>
+      <p>
+        <strong>Created At:</strong> <%= new
+        Date(urlDetails.createdAt).toLocaleString() %>
+      </p>
+      <p>
+        <strong>Last Updated:</strong> <%= new
+        Date(urlDetails.updatedAt).toLocaleString() %>
+      </p>
+
+      <h2>
+        Access Log <% if (urlDetails.accessLog && urlDetails.accessLog.length >
+        0) { %> (<%= urlDetails.accessLog.length %> entries) <% } else { %> (No
+        entries) <% } %>
+      </h2>
+
+      <% if (urlDetails.accessLog && urlDetails.accessLog.length > 0) { %>
+      <ul class="access-log-list">
+        <% urlDetails.accessLog.slice().reverse().forEach(function(log) { %>
+        <li>
+          <strong>IP:</strong>
+          <span class="code"><%= log.ip || 'N/A' %></span> -
+          <strong>Time:</strong> <%= new Date(log.accessedAt).toLocaleString()
+          %> <% if (log.userAgent) { %> <br /><em
+            >Agent: <%= log.userAgent %></em
+          >
+          <% } %> <% if (log.referrer) { %>
+          <br /><em>Referrer: <%= log.referrer %></em>
+          <% } %>
+        </li>
+        <% }); %>
+      </ul>
+      <% } else { %>
+      <p>No accesses have been logged for this URL yet.</p>
+      <% } %>
+
+      <a href="/" class="back-link">← Back to URL List</a>
+    </div>
+  </body>
+</html>

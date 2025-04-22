@@ -88,7 +88,7 @@ export const createShortUrl = asyncHandler(async (req, res) => {
         }
 
         const newGeneratedShortURL = `${config.BASE_URL}/${createdUrl.shortCode}`
-        console.log("The short url generated is:", newGeneratedShortURL)
+        // console.log("The short url generated is:", newGeneratedShortURL)
     
         return res.status(201).json(
             new ApiResponse(201, {
@@ -346,4 +346,36 @@ export const getShortUrlStats = asyncHandler(async (req, res) => {
             message: error.message
         });
     }
+    });
+
+
+
+    export const getShortUrlStatsView = asyncHandler(async (req, res) => {   
+            // console.log("Inside the vide stat function thingi")
+            const { shortCode } = req.params;
+            if (!shortCode) { 
+                throw new ApiError(400, "Short code parameter is required"); 
+            }
+    
+            const urlDoc = await Url.findOne({ shortCode: shortCode })
+                .select('id originalUrl shortCode createdAt updatedAt accessCount accessLog')
+                .lean();  
+    
+            if (!urlDoc) {
+                throw new ApiError(404, "Short URL not found"); 
+            }
+    
+            return res.status(200).render('details', {  
+                title: `Stats for ${shortCode}`,       
+                urlDetails: {                       
+                    id: urlDoc._id,
+                    url: urlDoc.originalUrl,
+                    shortCode: urlDoc.shortCode, 
+                    fullShortUrl: `${req.protocol}://${req.get('host')}/${urlDoc.shortCode}`,
+                    createdAt: urlDoc.createdAt,
+                    updatedAt: urlDoc.updatedAt,
+                    accessCount: urlDoc.accessCount || 0,  
+                    accessLog: urlDoc.accessLog || []   
+                }
+            });
     });

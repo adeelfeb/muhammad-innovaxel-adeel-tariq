@@ -11,6 +11,11 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.use((req, res, next) => {
+    // console.log(`INCOMING REQUEST: ${req.method} ${req.originalUrl}`);
+    next(); // Pass control on
+});
+
 // --- Middleware ---
 app.use(express.json({ limit: '64kb' }));
 app.use(express.urlencoded({ extended: true, limit: '64kb' }));

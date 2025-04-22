@@ -86,7 +86,9 @@
       }
       .url-list-container {
         width: 100vw; /* Full width of the viewport */
-        margin-left: calc(-1 * ((100vw - 100%) / 2)); /* Cancels body's auto horizontal margin */
+        margin-left: calc(
+          -1 * ((100vw - 100%) / 2)
+        ); /* Cancels body's auto horizontal margin */
         padding-left: 20px;
         padding-right: 20px;
         box-sizing: border-box;
@@ -170,11 +172,24 @@
         margin-bottom: 20px; /* Added margin below buttons */
         text-align: right;
       }
+      .details-button {
+        /* Style link like a button if desired */
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: #e6f4ff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.9em;
+      }
+      .details-button:hover {
+        background-color: #d6edff;
+      }
     </style>
   </head>
   <body>
-    <!-- <h1><%= title %></h1> -->
-
     <div class="page-controls">
       <button id="reload-button" type="button">Reload Page</button>
     </div>
@@ -197,61 +212,49 @@
     </div>
 
     <div class="url-list-container">
-      <!-- <h2>Shortened URL History</h2> -->
-
       <div class="table-wrapper">
         <table class="url-table">
           <thead>
             <tr>
-                <th>Short URL</th>
-                <th>Original URL</th>
-                <th>Created</th>
-                <th>Clicks</th>
-                <th>Access Details</th>  
+              <th>Short URL</th>
+              <th>Original URL</th>
+              <th>Clicks</th>
+              <th>Details</th>
             </tr>
-        </thead>
-        <tbody id="url-list-body">
-          <% if (locals.urls && locals.urls.length > 0) { %>
-              <% urls.forEach(function(url) { %>
-                  <tr>
-                      <td class="short-url-cell">
-                          <a href="<%= url.fullShortUrl %>" target="_blank">
-                              <%= url.fullShortUrl %>
-                          </a>
-                      </td>
-                      <td class="original-url" title="<%= url.originalUrl %>">
-                          <%= url.originalUrl %>
-                      </td>
-                      <td class="date-cell">
-                          <%= new Date(url.createdAt).toLocaleDateString() %>
-                          <%= new Date(url.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) %>
-                      </td>
-                      <td class="clicks-cell"><%= url.accessCount %></td>
-      
-                      <!-- NEW CELL FOR ACCESS LOGS -->
-                      <td class="access-log-cell">
-                          <% if (url.accessLog && url.accessLog.length > 0) { %>
-                              <ul class="access-log-list">
-                                  <% url.accessLog.slice(0, 5).forEach(function(logEntry) { %> <!-- Show first 5, for example -->
-                                      <li>
-                                          <span class="ip-address"><%= logEntry.ip %></span> -
-                                          <span class="access-time"><%= new Date(logEntry.accessedAt).toLocaleDateString() %></span>
-                                      </li>
-                                  <% }); %>
-                                  <% if (url.accessLog.length > 5) { %>
-                                      <li>... and <%= url.accessLog.length - 5 %> more</li>
-                                  <% } %>
-                              </ul>
-                          <% } else { %>
-                              <span class="no-accesses">No accesses yet</span>
-                          <% } %>
-                      </td>
-                      <!-- END NEW CELL -->
-      
-                  </tr>
-              <% }); %>
-          <% } %>
-      </tbody>
+          </thead>
+          <tbody id="url-list-body">
+            <% if (locals.urls && locals.urls.length > 0) { %> <%
+            urls.forEach(function(url) { %>
+            <tr data-shortcode="<%= url.shortCode %>">
+              <td class="short-url-cell">
+                <a href="/<%= url.shortCode %>" target="_blank">
+                  <%= url.fullShortUrl %>
+                </a>
+              </td>
+              <td class="original-url" title="<%= url.originalUrl %>">
+                <a
+                  href="<%= url.originalUrl %>"
+                  target="_blank"
+                  title="<%= url.originalUrl %>"
+                >
+                  <%= url.originalUrl %>
+                </a>
+              </td>
+
+              <td class="clicks-cell"><%= url.accessCount %></td>
+
+              <td class="details-cell">
+                <a
+                  href="/api/v1/shorten-view/<%= url.shortCode %>"
+                  target="_blank"
+                  class="details-button"
+                >
+                  More
+                </a>
+              </td>
+            </tr>
+            <% }); %> <% } %>
+          </tbody>
         </table>
       </div>
 
@@ -261,7 +264,6 @@
       </p>
       <% } %>
     </div>
-
     <script>
       const shortenForm = document.getElementById("shorten-form");
       const urlInput = document.getElementById("urlInput");
@@ -271,14 +273,18 @@
       const noUrlsMessage = document.getElementById("no-urls-message");
       const reloadButton = document.getElementById("reload-button");
 
+      // --- Helper function to add a new row via JS (if needed after form submit) ---
       function addUrlToTable(urlData) {
         const newRow = document.createElement("tr");
+        newRow.dataset.shortcode = urlData.shortCode;
 
         const shortUrlCell = document.createElement("td");
         shortUrlCell.classList.add("short-url-cell");
         const shortUrlLink = document.createElement("a");
-        shortUrlLink.href = urlData.shortUrl;
-        shortUrlLink.textContent = urlData.shortUrl;
+        shortUrlLink.href = `/${urlData.shortCode}`;
+        shortUrlLink.textContent =
+          urlData.fullShortUrl ||
+          `${window.location.origin}/${urlData.shortCode}`;
         shortUrlLink.target = "_blank";
         shortUrlCell.appendChild(shortUrlLink);
         newRow.appendChild(shortUrlCell);
@@ -286,17 +292,13 @@
         const originalUrlCell = document.createElement("td");
         originalUrlCell.classList.add("original-url");
         originalUrlCell.title = urlData.url;
-        originalUrlCell.textContent = urlData.url;
+        const originalUrlLink = document.createElement("a");
+        originalUrlLink.href = urlData.url;
+        originalUrlLink.target = "_blank";
+        originalUrlLink.title = urlData.url;
+        originalUrlLink.textContent = urlData.url;
+        originalUrlCell.appendChild(originalUrlLink);
         newRow.appendChild(originalUrlCell);
-
-        const dateCell = document.createElement("td");
-        dateCell.classList.add("date-cell");
-        const createdAtDate = new Date(urlData.createdAt);
-        dateCell.textContent = `${createdAtDate.toLocaleDateString()} ${createdAtDate.toLocaleTimeString(
-          [],
-          { hour: "2-digit", minute: "2-digit" }
-        )}`;
-        newRow.appendChild(dateCell);
 
         const clicksCell = document.createElement("td");
         clicksCell.classList.add("clicks-cell");
@@ -304,12 +306,19 @@
           urlData.accessCount !== undefined ? urlData.accessCount : 0;
         newRow.appendChild(clicksCell);
 
+        const detailsCell = document.createElement("td");
+        detailsCell.classList.add("details-cell");
+        const detailsLink = document.createElement("a");
+        detailsLink.href = `/shorten/${urlData.shortCode}/stats`;
+        detailsLink.classList.add("details-button");
+        detailsLink.textContent = "More";
+        detailsCell.appendChild(detailsLink);
+        newRow.appendChild(detailsCell);
+
         urlTableBody.prepend(newRow);
 
         if (noUrlsMessage && !noUrlsMessage.hidden) {
           noUrlsMessage.hidden = true;
-          // Remove the element entirely if preferred after first add
-          // noUrlsMessage.remove();
         }
       }
 
@@ -333,15 +342,25 @@
 
           const responseData = await response.json();
 
-          if (response.ok) {
+          if (response.ok && responseData.success) {
             formFeedback.textContent = responseData.message || "Success!";
             formFeedback.className = "form-feedback success";
             formFeedback.style.display = "block";
-            addUrlToTable(responseData.data);
+
+            if (responseData.data) {
+              addUrlToTable(responseData.data);
+            } else {
+              console.error("API success response missing data field.");
+              formFeedback.textContent =
+                "URL shortened, but failed to display. Please reload.";
+              formFeedback.className = "form-feedback error";
+            }
             urlInput.value = "";
           } else {
             formFeedback.textContent = `Error: ${
-              responseData.message || "An unknown error occurred."
+              responseData.message ||
+              response.statusText ||
+              "An unknown error occurred."
             }`;
             formFeedback.className = "form-feedback error";
             formFeedback.style.display = "block";
