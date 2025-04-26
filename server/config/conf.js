@@ -1,13 +1,32 @@
+// import dotenv from 'dotenv';
+// dotenv.config({ path: './.env' });  
+
+// const config = {
+//     env: process.env.NODE_ENV || 'development',
+//     port: process.env.PORT || 5000,
+//     mongodbUri: process.env.MONGO_URI || "mongodb://localhost:27017",
+//     BASE_URL: process.env.BASE_URL || `http://localhost:${process.env.PORT}` ,
+// };
+
+
+// // Freeze the object to prevent accidental modifications elsewhere
+// Object.freeze(config);
+
+// export default config;
+
 import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });  
+dotenv.config({ path: './.env' });
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 const config = {
     env: process.env.NODE_ENV || 'development',
     port: process.env.PORT || 5000,
-    mongodbUri: process.env.MONGO_URI || "mongodb://localhost:27017",
-    BASE_URL: process.env.BASE_URL || `http://localhost:${process.env.PORT}` ,
+    mongodbUri: process.env.MONGO_URI || 'mongodb://localhost:27017',
+    BASE_URL: isProduction 
+        ? `https://${process.env.VERCEL_URL}` 
+        : `http://localhost:${process.env.PORT || 5000}`
 };
-
 
 // Freeze the object to prevent accidental modifications elsewhere
 Object.freeze(config);
