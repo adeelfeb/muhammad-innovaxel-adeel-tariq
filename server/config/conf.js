@@ -24,7 +24,7 @@ const config = {
     port: process.env.PORT || 5000,
     mongodbUri: process.env.MONGO_URI || 'mongodb://localhost:27017',
     BASE_URL: isProduction 
-        ? `https://${process.env.VERCEL_URL}` 
+        ? `https://${process.env.BASE_URL}` 
         : `http://localhost:${process.env.PORT || 5000}`
 };
 
